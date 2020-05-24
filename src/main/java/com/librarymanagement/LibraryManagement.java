@@ -1,27 +1,38 @@
 package com.librarymanagement;
 
-import com.librarymanagement.repositories.BookRepository;
 import com.librarymanagement.utils.ComponenContainer;
+import com.librarymanagement.utils.InjectBy;
+import com.librarymanagement.utils.Inject;
 
-/**
- * Hello world!
- *
- */
-
-
-public class LibraryManagement {
+import javax.swing.*;
 
 
-
+public class LibraryManagement extends JFrame {
+	private JPanel mainView;
 	public LibraryManagement() {
-		ComponenContainer container = new ComponenContainer(Context.class);
-		BookRepository bookRepo = (BookRepository) container.getComponent(BookRepository.class);
-		System.out.println(container.getComponents());
-		System.out.println(bookRepo.getAllBooks());
-		System.out.println(bookRepo.searchByTitle("Lập trình Java"));
-		System.out.println(bookRepo.getBook("B0002"));
+		setVisible(true);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (UnsupportedLookAndFeelException e) {
+			e.printStackTrace();
+		}
 	}
 	public static void main(String[] args) {
-		LibraryManagement libraryManagement = new LibraryManagement();
+		ComponenContainer container = new ComponenContainer(Context.class);
+	}
+
+	@Inject(injectBy = InjectBy.NAME, component = "mainView")
+	public void setMainView(JPanel mainView) {
+		this.mainView = mainView;
+		setContentPane(mainView);
+		pack();
 	}
 }

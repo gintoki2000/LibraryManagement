@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = {ElementType.METHOD})
-public @interface InjectDependency {
+public @interface Inject {
     InjectBy injectBy() default InjectBy.TYPE;
-    String dependencyName() default "";
+    String component() default "";
 }

@@ -57,14 +57,14 @@ public class ComponenContainer {
         for (Map.Entry<String, Object> entry : components.entrySet()) {
             Method[] methods = entry.getValue().getClass().getMethods();
             for (Method method : methods) {
-                if (method.isAnnotationPresent(InjectDependency.class) && method.getParameterCount() == 1) {
+                if (method.isAnnotationPresent(Inject.class) && method.getParameterCount() == 1) {
                     try {
-                        InjectDependency injectDependency = method.getAnnotation(InjectDependency.class);
-                        if (injectDependency.injectBy() == InjectBy.TYPE) {
+                        Inject inject = method.getAnnotation(Inject.class);
+                        if (inject.injectBy() == InjectBy.TYPE) {
                             method.invoke(entry.getValue(), getComponent(method.getParameterTypes()[0]));
                         }
                         else {
-                            method.invoke(entry.getValue(), getComponent(injectDependency.dependencyName()));
+                            method.invoke(entry.getValue(), getComponent(inject.component()));
                         }
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();

@@ -14,7 +14,7 @@ public class Book {
     private String author;
     private boolean status;
     private String keyword;
-    private String category;
+    private Category category;
 
     @Override
     public boolean equals(Object o) {

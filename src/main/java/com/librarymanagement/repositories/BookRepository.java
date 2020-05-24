@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface BookRepository {
     List<Book> getAllBooks();
-    void addNewBook(Book book);
+    boolean addNewBook(Book book);
     boolean updateBook(Book book);
-    void removeBook(String bookID);
+    boolean removeBook(String bookID);
     Book getBook(String bookID);
     List<Book> searchByTitle(String title);
     List<Book> searchByCategory(String category);
