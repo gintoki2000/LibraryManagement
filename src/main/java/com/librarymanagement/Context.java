@@ -1,16 +1,22 @@
 package com.librarymanagement;
 
+import com.librarymanagement.controllers.BookViewerController;
+import com.librarymanagement.controllers.BookViewerControllerImpl;
+import com.librarymanagement.entities.Book;
+import com.librarymanagement.models.BookViewerModel;
+import com.librarymanagement.models.BookViewerModelImpl;
 import com.librarymanagement.repositories.BookRepository;
 import com.librarymanagement.repositories.BookRepositoryImpl;
 import com.librarymanagement.repositories.CategoryRepository;
 import com.librarymanagement.repositories.CategoryRepositoryImpl;
 import com.librarymanagement.utils.Component;
-import com.librarymanagement.views.TestView;
+import com.librarymanagement.views.BookViewer;
 
 import javax.swing.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Properties;
 
 public class Context {
@@ -45,7 +51,11 @@ public class Context {
     }
 
     @Component
-    public JPanel mainView() {
-        return new TestView();
-    }
+    public BookViewer bookViewer() { return new BookViewer(); }
+    
+    @Component
+    public BookViewerModel bookViewerModel() { return new BookViewerModelImpl(); }
+    
+    @Component
+    public BookViewerController bookViewerController() { return new BookViewerControllerImpl(); }
 }

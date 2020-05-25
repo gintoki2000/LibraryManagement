@@ -1,41 +1,29 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.librarymanagement.views;
 
 import com.librarymanagement.entities.Book;
 import com.librarymanagement.entities.Category;
-
-import javax.swing.*;
-import javax.swing.event.TableModelListener;
-import javax.swing.table.TableModel;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.TableModel;
 
-public class TestView extends JPanel {
-    private JTable table;
-    private BookTableModel bookTableModel;
-
-
-    public TestView() {
-        bookTableModel = new BookTableModel();
-        table = new JTable(bookTableModel);
-        List<Book> books = new ArrayList<>();
-        Book book = null;
-        books.add(book = new Book());
-        bookTableModel.setBooks(books);
-        book.setTitle("fuck you");
-        book.setCategory(new Category("", "18+"));
-        add(table);
-    }
-}
-
-class BookTableModel implements TableModel{
-    private final Class[] classes = new Class[] {
-            String.class, String.class, String.class, String.class, String.class
-    };
-
-    private final String[] columnNames = new String[] {
-            "BookID", "Title", "Author", "Category", "Keyword"
-    };
+/**
+ *
+ * @author ngotrung
+ */
+public class BookTableModel implements TableModel {
+    
+    private final Class[] classes = new Class[]{String.class, String.class, String.class, String.class, String.class};
+    private final String[] columnNames = new String[]{"BookID", "Title", "Author", "Category", "Keyword"};
     private List<Book> books = new ArrayList<>();
+    
+    public BookTableModel() {
+    }
 
     public List<Book> getBooks() {
         return books;
@@ -44,12 +32,11 @@ class BookTableModel implements TableModel{
     public void setBooks(List<Book> books) {
         this.books = books;
     }
-
-    private final static int BOOKID = 0;
-    private final static int TITLE= 1;
-    private final static int AUTHOR= 2;
-    private final static int CATEGORY= 3;
-    private final static int KEYWORD = 4;
+    private static final int BOOKID = 0;
+    private static final int TITLE = 1;
+    private static final int AUTHOR = 2;
+    private static final int CATEGORY = 3;
+    private static final int KEYWORD = 4;
 
     @Override
     public int getRowCount() {
@@ -79,7 +66,7 @@ class BookTableModel implements TableModel{
     @Override
     public Object getValueAt(int r, int c) {
         Book book = books.get(r);
-        switch(c) {
+        switch (c) {
             case BOOKID:
                 return book.getId();
             case TITLE:
@@ -96,16 +83,14 @@ class BookTableModel implements TableModel{
 
     @Override
     public void setValueAt(Object o, int i, int i1) {
-
     }
 
     @Override
     public void addTableModelListener(TableModelListener tableModelListener) {
-
     }
 
     @Override
     public void removeTableModelListener(TableModelListener tableModelListener) {
-
     }
+    
 }

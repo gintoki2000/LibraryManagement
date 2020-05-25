@@ -43,7 +43,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
         return null;
     }
 
-    @Inject(injectBy = InjectBy.NAME, component = "connection")
+    @Inject
     public void setConnection(Connection connection) {
         this.connection = connection;
     }

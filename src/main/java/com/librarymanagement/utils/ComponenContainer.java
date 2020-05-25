@@ -1,11 +1,14 @@
 package com.librarymanagement.utils;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ComponenContainer {
 
@@ -37,7 +40,15 @@ public class ComponenContainer {
     private void createComponents(Class<?> clazz) {
         Method methods[] = clazz.getMethods();
         try {
-            Object config = (Object) clazz.newInstance();
+            Constructor constructor = null;
+            Object config = null;
+            for (Constructor c : clazz.getConstructors()) {
+                if (c.getParameterCount() == 0) {
+                    constructor = c;
+                    break;
+                }
+            }
+            config = (Object) constructor.newInstance();
             for (Method method : methods) {
                 if (method.isAnnotationPresent(Component.class)) {
                     Object component = method.invoke(config);
@@ -55,25 +66,49 @@ public class ComponenContainer {
 
     private void injectDependencies() {
         for (Map.Entry<String, Object> entry : components.entrySet()) {
-            Method[] methods = entry.getValue().getClass().getMethods();
+            Object object = entry.getValue();
+            Method[] methods = object.getClass().getMethods();
             for (Method method : methods) {
-                if (method.isAnnotationPresent(Inject.class) && method.getParameterCount() == 1) {
-                    try {
+                if (method.isAnnotationPresent(Inject.class)) {
+                    if (method.getParameterCount() == 1) {
+                        Class<?> parameterType = method.getParameterTypes()[0].getClass();
                         Inject inject = method.getAnnotation(Inject.class);
-                        if (inject.injectBy() == InjectBy.TYPE) {
-                            method.invoke(entry.getValue(), getComponent(method.getParameterTypes()[0]));
+                        Object component = null;
+                        if (inject.injectBy() == InjectBy.NAME) {
+                            String componentName = inject.componentName().equals("") ? method.getParameters()[0].getName() : inject.componentName();
+                            component = getComponent(componentName);
                         }
                         else {
-                            method.invoke(entry.getValue(), getComponent(inject.component()));
+                            component = getComponent(parameterType);
                         }
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    } catch (InvocationTargetException e) {
-                        e.printStackTrace();
+                        if (component != null) {
+                            try {
+                                method.invoke(object, component);
+                            } catch (IllegalAccessException ex) {
+                                Logger.getLogger(ComponenContainer.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (IllegalArgumentException ex) {
+                                Logger.getLogger(ComponenContainer.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (InvocationTargetException ex) {
+                                Logger.getLogger(ComponenContainer.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                        else {
+                            System.err.println("Container does not contain ");
+                        }
+                    
+                    } else {
+                        System.out.println("setter method must have one parameter");
                     }
                 }
             }
         }
     }
+
+    @Override
+    public String toString() {
+        return components.toString();
+    }
+    
+    
 
 }

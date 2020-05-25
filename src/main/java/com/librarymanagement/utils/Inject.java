@@ -8,6 +8,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = {ElementType.METHOD})
 public @interface Inject {
-    InjectBy injectBy() default InjectBy.TYPE;
-    String component() default "";
+    InjectBy injectBy() default InjectBy.NAME;
+    String componentName() default "";
 }

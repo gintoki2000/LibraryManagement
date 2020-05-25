@@ -156,12 +156,12 @@ public class BookRepositoryImpl implements BookRepository{
         return  book;
     }
 
-    @Inject(injectBy = InjectBy.NAME, component = "categoryRepository")
+    @Inject
     public void setCategoryRepository(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
     }
 
-    @Inject(injectBy = InjectBy.NAME, component = "connection")
+    @Inject
     public void setConnection(Connection connection) {
         this.connection = connection;
     }
