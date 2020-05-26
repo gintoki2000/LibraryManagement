@@ -2,7 +2,6 @@ package com.librarymanagement.repositories;
 
 import com.librarymanagement.entities.Book;
 import com.librarymanagement.entities.Category;
-import com.librarymanagement.utils.InjectBy;
 import com.librarymanagement.utils.Inject;
 
 import java.sql.Connection;
@@ -156,12 +155,12 @@ public class BookRepositoryImpl implements BookRepository{
         return  book;
     }
 
-    @Inject
+    @Inject(componentName = "categoryRepository")
     public void setCategoryRepository(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
     }
 
-    @Inject
+    @Inject(componentName = "connection")
     public void setConnection(Connection connection) {
         this.connection = connection;
     }

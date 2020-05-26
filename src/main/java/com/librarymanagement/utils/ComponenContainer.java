@@ -74,13 +74,10 @@ public class ComponenContainer {
                         Class<?> parameterType = method.getParameterTypes()[0].getClass();
                         Inject inject = method.getAnnotation(Inject.class);
                         Object component = null;
-                        if (inject.injectBy() == InjectBy.NAME) {
-                            String componentName = inject.componentName().equals("") ? method.getParameters()[0].getName() : inject.componentName();
-                            component = getComponent(componentName);
-                        }
-                        else {
-                            component = getComponent(parameterType);
-                        }
+
+                        String componentName = inject.componentName().equals("") ? method.getParameters()[0].getName() : inject.componentName();
+                        component = getComponent(componentName);
+
                         if (component != null) {
                             try {
                                 method.invoke(object, component);
@@ -91,11 +88,10 @@ public class ComponenContainer {
                             } catch (InvocationTargetException ex) {
                                 Logger.getLogger(ComponenContainer.class.getName()).log(Level.SEVERE, null, ex);
                             }
+                        } else {
+                            System.err.println("Container does not contain " + componentName);
                         }
-                        else {
-                            System.err.println("Container does not contain ");
-                        }
-                    
+
                     } else {
                         System.out.println("setter method must have one parameter");
                     }
@@ -108,7 +104,5 @@ public class ComponenContainer {
     public String toString() {
         return components.toString();
     }
-    
-    
 
 }

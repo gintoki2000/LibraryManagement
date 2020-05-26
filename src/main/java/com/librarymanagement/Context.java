@@ -10,6 +10,7 @@ import com.librarymanagement.repositories.BookRepositoryImpl;
 import com.librarymanagement.repositories.CategoryRepository;
 import com.librarymanagement.repositories.CategoryRepositoryImpl;
 import com.librarymanagement.utils.Component;
+import com.librarymanagement.views.About;
 import com.librarymanagement.views.BookViewer;
 
 import javax.swing.*;
@@ -29,8 +30,7 @@ public class Context {
         try {
             return DriverManager.getConnection(Config.DB_URL, properties);
         } catch (SQLException sqlException) {
-            System.out.println("Failed to connect to database server!!!");
-            sqlException.printStackTrace();
+            System.out.println("Failed to connect to database server!!!: " + sqlException.getMessage());
         }
         return null;
     }
@@ -58,4 +58,7 @@ public class Context {
     
     @Component
     public BookViewerController bookViewerController() { return new BookViewerControllerImpl(); }
+    
+    @Component
+    public About about() { return new About(); }
 }

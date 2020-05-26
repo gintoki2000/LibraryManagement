@@ -1,7 +1,6 @@
 package com.librarymanagement.repositories;
 
 import com.librarymanagement.entities.Category;
-import com.librarymanagement.utils.InjectBy;
 import com.librarymanagement.utils.Inject;
 
 import java.sql.*;
@@ -43,7 +42,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
         return null;
     }
 
-    @Inject
+    @Inject(componentName = "connection")
     public void setConnection(Connection connection) {
         this.connection = connection;
     }

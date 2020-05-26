@@ -3,7 +3,6 @@ package com.librarymanagement;
 import com.librarymanagement.controllers.BookViewerController;
 import com.librarymanagement.repositories.BookRepository;
 import com.librarymanagement.utils.ComponenContainer;
-import com.librarymanagement.utils.InjectBy;
 import com.librarymanagement.utils.Inject;
 import com.librarymanagement.views.BookViewer;
 

@@ -23,10 +23,11 @@ public class BookViewerModelImpl implements BookViewerModel{
         return bookRepository.getAllBooks();
     }
 
-    @Inject
+    @Inject(componentName = "bookRepository")
     public void setBookRepository(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
     }
+
     
     
     
