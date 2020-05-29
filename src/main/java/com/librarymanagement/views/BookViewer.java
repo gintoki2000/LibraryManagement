@@ -9,6 +9,7 @@ import com.librarymanagement.controllers.BookViewerController;
 import com.librarymanagement.entities.Book;
 import com.librarymanagement.utils.Inject;
 import java.util.List;
+import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
@@ -24,7 +25,6 @@ public class BookViewer extends javax.swing.JPanel {
     
     
     private final BookTableModel bookTableModel;
-    private BookViewerController bookViewerController;
     
     
     public BookViewer() {
@@ -35,11 +35,6 @@ public class BookViewer extends javax.swing.JPanel {
     public void updateBooks(List<Book> books) {
         bookTableModel.setBooks(books);
         bookViewTable.updateUI();
-    }
-
-    @Inject(componentName = "bookViewerController")
-    public void setBookViewerController(BookViewerController bookViewerController) {
-        this.bookViewerController = bookViewerController;
     }
     
 
@@ -73,26 +68,11 @@ public class BookViewer extends javax.swing.JPanel {
         aboutButton = new javax.swing.JButton();
 
         bookViewTable.setModel(this.bookTableModel);
-        bookViewTable.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                bookViewTableMouseClicked(evt);
-            }
-        });
         jScrollPane1.setViewportView(bookViewTable);
 
         addButton.setText("Add");
-        addButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addButtonActionPerformed(evt);
-            }
-        });
 
         updateButton.setText("Update");
-        updateButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                updateButtonActionPerformed(evt);
-            }
-        });
 
         deleteButton.setText("Delete");
 
@@ -164,11 +144,6 @@ public class BookViewer extends javax.swing.JPanel {
         );
 
         aboutButton.setText("About");
-        aboutButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                aboutButtonActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -213,23 +188,21 @@ public class BookViewer extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_addButtonActionPerformed
+    public JButton getAboutButton() {
+        return aboutButton;
+    }
 
-    private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_updateButtonActionPerformed
+    public JButton getAddButton() {
+        return addButton;
+    }
 
-    private void aboutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutButtonActionPerformed
-        // TODO add your handling code here:
-        bookViewerController.onAboutButtonClicked();
-    }//GEN-LAST:event_aboutButtonActionPerformed
+    public JButton getDeleteButton() {
+        return deleteButton;
+    }
 
-    private void bookViewTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bookViewTableMouseClicked
-        // TODO add your handling code here:
-        bookViewerController.onBookTableMouseClicked();
-    }//GEN-LAST:event_bookViewTableMouseClicked
+    public JButton getUpdateButton() {
+        return updateButton;
+    }
 
     public BookTableModel getBookTableModel() {
         return bookTableModel;

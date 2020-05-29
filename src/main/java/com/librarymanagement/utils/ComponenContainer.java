@@ -1,5 +1,6 @@
 package com.librarymanagement.utils;
 
+import com.librarymanagement.repositories.ComponentCreationException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -14,7 +15,9 @@ public class ComponenContainer {
 
     private Map<String, Object> components;
 
-    public ComponenContainer(Class<?> clazz) {
+    private Object config;
+
+    public ComponenContainer(Class<?> clazz) throws ComponentCreationException {
         components = new HashMap<>();
         createComponents(clazz);
         injectDependencies();
@@ -37,11 +40,10 @@ public class ComponenContainer {
         return new ArrayList<>(components.values());
     }
 
-    private void createComponents(Class<?> clazz) {
+    private void createComponents(Class<?> clazz) throws ComponentCreationException {
         Method methods[] = clazz.getMethods();
         try {
             Constructor constructor = null;
-            Object config = null;
             for (Constructor c : clazz.getConstructors()) {
                 if (c.getParameterCount() == 0) {
                     constructor = c;
@@ -55,16 +57,12 @@ public class ComponenContainer {
                     components.put(method.getName(), component);
                 }
             }
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new ComponentCreationException("", e);
         }
     }
 
-    private void injectDependencies() {
+    private void injectDependencies() throws ComponentCreationException {
         for (Map.Entry<String, Object> entry : components.entrySet()) {
             Object object = entry.getValue();
             Method[] methods = object.getClass().getMethods();
@@ -72,28 +70,26 @@ public class ComponenContainer {
                 if (method.isAnnotationPresent(Inject.class)) {
                     if (method.getParameterCount() == 1) {
                         Class<?> parameterType = method.getParameterTypes()[0].getClass();
-                        Inject inject = method.getAnnotation(Inject.class);
+                        Inject injectAnotation = method.getAnnotation(Inject.class);
                         Object component = null;
 
-                        String componentName = inject.componentName().equals("") ? method.getParameters()[0].getName() : inject.componentName();
-                        component = getComponent(componentName);
+                        component = getComponent(injectAnotation.componentName());
 
-                        if (component != null) {
-                            try {
-                                method.invoke(object, component);
-                            } catch (IllegalAccessException ex) {
-                                Logger.getLogger(ComponenContainer.class.getName()).log(Level.SEVERE, null, ex);
-                            } catch (IllegalArgumentException ex) {
-                                Logger.getLogger(ComponenContainer.class.getName()).log(Level.SEVERE, null, ex);
-                            } catch (InvocationTargetException ex) {
-                                Logger.getLogger(ComponenContainer.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                        } else {
-                            System.err.println("Container does not contain " + componentName);
+                        if (parameterType.isInstance(component)) {
+                            throw new ComponentCreationException("The dependent type have to same with component type");
+                        }
+                        if (component == null) {
+                            throw new ComponentCreationException("Container does not contain " + injectAnotation.componentName());
+                        }
+
+                        try {
+                            method.invoke(object, component);
+                        } catch (Exception ex) {
+                            throw new ComponentCreationException("Failed to inject component " + injectAnotation.componentName());
                         }
 
                     } else {
-                        System.out.println("setter method must have one parameter");
+                        throw new ComponentCreationException(method.getName() + " method must have one parameter");
                     }
                 }
             }
