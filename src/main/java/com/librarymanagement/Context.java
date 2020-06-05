@@ -11,23 +11,9 @@ import com.librarymanagement.utils.Component;
 import com.librarymanagement.views.About;
 import com.librarymanagement.views.BookViewer;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.Properties;
 
 public class Context {
 
-    @Component
-    public Connection connection() throws SQLException {
-        Properties properties = new Properties();
-        properties.put("user", Config.USER_NAME);
-        properties.put("password", Config.PASSWORD);
-        properties.put("databaseName", Config.DATABASE_NAME);
-
-        return DriverManager.getConnection(Config.DB_URL, properties);
-
-    }
 
     @Component
     public BookRepository bookRepository() {

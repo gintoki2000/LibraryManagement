@@ -15,7 +15,6 @@ public class BookRepositoryImpl implements BookRepository{
 
 
     private Connection connection;
-    private CategoryRepository categoryRepository;
 
 
     @Override
@@ -42,7 +41,7 @@ public class BookRepositoryImpl implements BookRepository{
             statement.setString(1, book.getId());
             statement.setString(2, book.getTitle());
             statement.setString(3, book.getAuthor());
-            statement.setString(4, book.getCategory().getID());
+            statement.setString(4, book.getCategory());
             statement.setString(5, book.getKeyword());
 
             return statement.execute();
@@ -54,14 +53,14 @@ public class BookRepositoryImpl implements BookRepository{
 
     @Override
     public boolean updateBook(Book book) {
-        String sql = "UPDATE Books SET BookID=?, Title=?, Author=?, Category=? Keyword=?";
+        String sql = "UPDATE Books SET Title=?, Author=?, Category=?, Keyword=? WHERE BookID=?";
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, book.getId());
-            statement.setString(2, book.getTitle());
-            statement.setString(3, book.getAuthor());
-            statement.setString(4, book.getCategory().getID());
-            statement.setString(5, book.getKeyword());
+            statement.setString(5, book.getId());
+            statement.setString(1, book.getTitle());
+            statement.setString(2, book.getAuthor());
+            statement.setString(3, book.getCategory());
+            statement.setString(4, book.getKeyword());
 
             return statement.execute();
         } catch (SQLException throwables) {
@@ -149,15 +148,10 @@ public class BookRepositoryImpl implements BookRepository{
         book.setId(rs.getString("BookID"));
         book.setTitle(rs.getString("Title"));
         book.setAuthor(rs.getString("Author"));
-        Category category = categoryRepository.getCategoryByID(rs.getString("Category"));
-        book.setCategory(category);
+        book.setCategory(rs.getString("Category"));
         book.setKeyword(rs.getString("Keyword"));
+        
         return  book;
-    }
-
-    @Inject(componentName = "categoryRepository")
-    public void setCategoryRepository(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
     }
 
     @Inject(componentName = "connection")

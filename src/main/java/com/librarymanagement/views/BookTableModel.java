@@ -6,7 +6,6 @@
 package com.librarymanagement.views;
 
 import com.librarymanagement.entities.Book;
-import com.librarymanagement.entities.Category;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.event.TableModelListener;
@@ -74,7 +73,7 @@ public class BookTableModel implements TableModel {
             case AUTHOR:
                 return book.getAuthor();
             case CATEGORY:
-                return book.getCategory().getName();
+                return book.getCategory();
             case KEYWORD:
                 return book.getKeyword();
         }

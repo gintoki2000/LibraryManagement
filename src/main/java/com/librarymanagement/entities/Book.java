@@ -12,27 +12,54 @@ public class Book {
     private String id;
     private String title;
     private String author;
-    private boolean status;
     private String keyword;
-    private Category category;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Book)) return false;
-        Book book = (Book) o;
-        return isStatus() == book.isStatus() &&
-                Objects.equals(getId(), book.getId()) &&
-                Objects.equals(getTitle(), book.getTitle()) &&
-                Objects.equals(getAuthor(), book.getAuthor()) &&
-                Objects.equals(getKeyword(), book.getKeyword()) &&
-                Objects.equals(getCategory(), book.getCategory());
-    }
+    private String category;
+    
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getTitle(), getAuthor(), isStatus(), getKeyword(), getCategory());
+        int hash = 3;
+        hash = 29 * hash + Objects.hashCode(this.id);
+        hash = 29 * hash + Objects.hashCode(this.title);
+        hash = 29 * hash + Objects.hashCode(this.author);
+    
+        hash = 29 * hash + Objects.hashCode(this.keyword);
+        hash = 29 * hash + Objects.hashCode(this.category);
+        return hash;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Book other = (Book) obj;
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        if (!Objects.equals(this.title, other.title)) {
+            return false;
+        }
+        if (!Objects.equals(this.author, other.author)) {
+            return false;
+        }
+        
+        if (!Objects.equals(this.keyword, other.keyword)) {
+            return false;
+        }
+        if (!Objects.equals(this.category, other.category)) {
+            return false;
+        }
+        return true;
+    }
+
+   
 
     @Override
     public String toString() {
@@ -40,7 +67,7 @@ public class Book {
                 "id='" + id + '\'' +
                 ", title='" + title + '\'' +
                 ", author='" + author + '\'' +
-                ", status=" + status +
+                
                 ", keyword='" + keyword + '\'' +
                 ", category='" + category + '\'' +
                 '}';

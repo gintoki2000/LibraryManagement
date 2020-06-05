@@ -1,26 +1,25 @@
 package com.librarymanagement.utils;
 
-import com.librarymanagement.repositories.ComponentCreationException;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-public class ComponenContainer {
+public class AppContext {
 
-    private Map<String, Object> components;
+    private final Map<String, Object> components;
 
     private Object config;
 
-    public ComponenContainer(Class<?> clazz) throws ComponentCreationException {
+    public AppContext(Class<?> clazz) throws ComponentCreationException, ComponentInjectionException {
         components = new HashMap<>();
         createComponents(clazz);
-        injectDependencies();
+    }
+
+    public void addComponent(String name, Object component) {
+        components.put(name, component);
     }
 
     public Object getComponent(Class<?> clazz) {
@@ -54,7 +53,7 @@ public class ComponenContainer {
             for (Method method : methods) {
                 if (method.isAnnotationPresent(Component.class)) {
                     Object component = method.invoke(config);
-                    components.put(method.getName(), component);
+                    addComponent(method.getName(), component);
                 }
             }
         } catch (Exception e) {
@@ -62,7 +61,7 @@ public class ComponenContainer {
         }
     }
 
-    private void injectDependencies() throws ComponentCreationException {
+    private void injectDependencies() throws ComponentInjectionException {
         for (Map.Entry<String, Object> entry : components.entrySet()) {
             Object object = entry.getValue();
             Method[] methods = object.getClass().getMethods();
@@ -76,20 +75,20 @@ public class ComponenContainer {
                         component = getComponent(injectAnotation.componentName());
 
                         if (parameterType.isInstance(component)) {
-                            throw new ComponentCreationException("The dependent type have to same with component type");
+                            throw new ComponentInjectionException("The dependent type have to same with component type", method ,injectAnotation.componentName());
                         }
                         if (component == null) {
-                            throw new ComponentCreationException("Container does not contain " + injectAnotation.componentName());
+                            throw new ComponentInjectionException("Container does not contain ", method, injectAnotation.componentName());
                         }
 
                         try {
                             method.invoke(object, component);
                         } catch (Exception ex) {
-                            throw new ComponentCreationException("Failed to inject component " + injectAnotation.componentName());
+                            throw new ComponentInjectionException("Failed to inject component ", method ,injectAnotation.componentName());
                         }
 
                     } else {
-                        throw new ComponentCreationException(method.getName() + " method must have one parameter");
+                        throw new ComponentInjectionException("method must have only one parameter", method, null);
                     }
                 }
             }
@@ -101,4 +100,7 @@ public class ComponenContainer {
         return components.toString();
     }
 
+    public void refresh() throws ComponentInjectionException {
+        injectDependencies();
+    }
 }
