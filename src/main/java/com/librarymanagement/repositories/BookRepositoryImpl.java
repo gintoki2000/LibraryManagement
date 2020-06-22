@@ -140,7 +140,7 @@ public class BookRepositoryImpl implements BookRepository {
     @Override
     public List<Book> search(String value, String by) throws SQLException {
         List<Book> books = new ArrayList<>();
-        String sql = "SELECT * FROM Books WHERE "+ by+"=\'"+value +"\'" ;
+        String sql = "SELECT * FROM Books WHERE "+ by+" like \'%"+value +"%\'" ;
         System.out.println(value + ", "+by);
         try (Connection con = connectionHelper.getConnection(); PreparedStatement statement = con.prepareStatement(sql)) {
             
@@ -155,7 +155,7 @@ public class BookRepositoryImpl implements BookRepository {
     @Override
     public List<Book> search(String value, String by, String groupBy) throws SQLException {
         List<Book> books = new ArrayList<>();
-        String sql = "SELECT * FROM Books WHERE "+ by+"=\'"+value +"\' ORDER BY " + groupBy;
+        String sql = "SELECT * FROM Books WHERE "+ by+" like \'%"+value +"%\' ORDER BY " + groupBy;
         System.out.println(sql);
         try (Connection con = connectionHelper.getConnection(); PreparedStatement statement = con.prepareStatement(sql)) {
             
